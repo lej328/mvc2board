@@ -1,0 +1,177 @@
+-- 새 테이블
+ALTER TABLE `BOARD`
+	DROP FOREIGN KEY `FK_MEMBER_TO_BOARD`; -- MEMBER -> 새 테이블
+
+-- 새 테이블2
+ALTER TABLE `COMMENT`
+	DROP FOREIGN KEY `FK_MEMBER_TO_COMMENT`; -- MEMBER -> 새 테이블2
+
+-- 새 테이블2
+ALTER TABLE `COMMENT`
+	DROP FOREIGN KEY `FK_BOARD_TO_COMMENT`; -- 새 테이블 -> 새 테이블2
+
+-- 새 테이블3
+ALTER TABLE `ATTACHFILE`
+	DROP FOREIGN KEY `FK_BOARD_TO_ATTACHFILE`; -- 새 테이블 -> 새 테이블3
+
+-- MEMBER
+ALTER TABLE `MEMBER`
+	DROP PRIMARY KEY; -- MEMBER 기본키
+
+-- 새 테이블
+ALTER TABLE `BOARD`
+	DROP PRIMARY KEY; -- 새 테이블 기본키
+
+-- 새 테이블2
+ALTER TABLE `COMMENT`
+	DROP PRIMARY KEY; -- 새 테이블2 기본키
+
+-- 새 테이블3
+ALTER TABLE `ATTACHFILE`
+	DROP PRIMARY KEY; -- 새 테이블3 기본키
+
+-- MEMBER
+DROP TABLE IF EXISTS `MEMBER` RESTRICT;
+
+-- 새 테이블
+DROP TABLE IF EXISTS `BOARD` RESTRICT;
+
+-- 새 테이블2
+DROP TABLE IF EXISTS `COMMENT` RESTRICT;
+
+-- 새 테이블3
+DROP TABLE IF EXISTS `ATTACHFILE` RESTRICT;
+
+-- MEMBER
+CREATE TABLE `MEMBER` (
+	`MNO`       INTEGER      NOT NULL COMMENT '회원일련번호', -- 회원일련번호
+	`MID`       VARCHAR(100) NOT NULL COMMENT '아이디', -- 아이디
+	`MPWD`      VARCHAR(40)  NOT NULL COMMENT '암호', -- 암호
+	`MEMAIL`    VARCHAR(40)  NOT NULL COMMENT '이메일', -- 이메일
+	`MNAME`     VARCHAR(50)  NOT NULL COMMENT '이름', -- 이름
+	`MREG_DATE` TIMESTAMP    NOT NULL COMMENT '가입일' -- 가입일
+)
+COMMENT 'MEMBER';
+
+-- MEMBER
+ALTER TABLE `MEMBER`
+	ADD CONSTRAINT `PK_MEMBER` -- MEMBER 기본키
+		PRIMARY KEY (
+			`MNO` -- 회원일련번호
+		);
+
+ALTER TABLE `MEMBER`
+	MODIFY COLUMN `MNO` INTEGER NOT NULL AUTO_INCREMENT COMMENT '회원일련번호';
+
+ALTER TABLE `MEMBER`
+	AUTO_INCREMENT = 1;
+
+-- 새 테이블
+CREATE TABLE `BOARD` (
+	`BNO`       INTEGER      NOT NULL COMMENT '게시글일련번호', -- 게시글일련번호
+	`MNO`       INTEGER      NOT NULL COMMENT '회원일련번호', -- 회원일련번호
+	`BTITLE`    VARCHAR(255) NOT NULL COMMENT '제목', -- 제목
+	`BCONT`     TEXT         NOT NULL COMMENT '내용 ', -- 내용 
+	`BREG_DATE` TIMESTAMP    NOT NULL COMMENT '작성일 ', -- 작성일 
+	`BVIEW_CNT` INTEGER      NOT NULL COMMENT '추천수' -- 추천수
+)
+COMMENT '새 테이블';
+
+-- 새 테이블
+ALTER TABLE `BOARD`
+	ADD CONSTRAINT `PK_BOARD` -- 새 테이블 기본키
+		PRIMARY KEY (
+			`BNO` -- 게시글일련번호
+		);
+
+ALTER TABLE `BOARD`
+	MODIFY COLUMN `BNO` INTEGER NOT NULL AUTO_INCREMENT COMMENT '게시글일련번호';
+
+ALTER TABLE `BOARD`
+	AUTO_INCREMENT = 1;
+
+-- 새 테이블2
+CREATE TABLE `COMMENT` (
+	`CNO`       INTEGER   NOT NULL COMMENT '댓글일련번호', -- 댓글일련번호
+	`MNO`       INTEGER   NOT NULL COMMENT '회원일련번호', -- 회원일련번호
+	`BNO`       INTEGER   NOT NULL COMMENT '게시글일련번호', -- 게시글일련번호
+	`CCONT`     TEXT      NOT NULL COMMENT '댓글내용', -- 댓글내용
+	`CREG_DATE` TIMESTAMP NOT NULL COMMENT '댓글작성일 ' -- 댓글작성일 
+)
+COMMENT '새 테이블2';
+
+-- 새 테이블2
+ALTER TABLE `COMMENT`
+	ADD CONSTRAINT `PK_COMMENT` -- 새 테이블2 기본키
+		PRIMARY KEY (
+			`CNO` -- 댓글일련번호
+		);
+
+ALTER TABLE `COMMENT`
+	MODIFY COLUMN `CNO` INTEGER NOT NULL AUTO_INCREMENT COMMENT '댓글일련번호';
+
+ALTER TABLE `COMMENT`
+	AUTO_INCREMENT = 1;
+
+-- 새 테이블3
+CREATE TABLE `ATTACHFILE` (
+	`FNO`        INTEGER      NOT NULL COMMENT '파일일련번호', -- 파일일련번호
+	`BNO`        INTEGER      NOT NULL COMMENT '게시글일련번호', -- 게시글일련번호
+	`FORI_NAME`  VARCHAR(255) NOT NULL COMMENT '원본파일이름', -- 원본파일이름
+	`FREAL_NAME` VARCHAR(255) NOT NULL COMMENT '저장된파일이름', -- 저장된파일이름
+	`FSAVED_DIR` VARCHAR(255) NOT NULL COMMENT '저장된파일경로' -- 저장된파일경로
+)
+COMMENT '새 테이블3';
+
+-- 새 테이블3
+ALTER TABLE `ATTACHFILE`
+	ADD CONSTRAINT `PK_ATTACHFILE` -- 새 테이블3 기본키
+		PRIMARY KEY (
+			`FNO` -- 파일일련번호
+		);
+
+ALTER TABLE `ATTACHFILE`
+	MODIFY COLUMN `FNO` INTEGER NOT NULL AUTO_INCREMENT COMMENT '파일일련번호';
+
+ALTER TABLE `ATTACHFILE`
+	AUTO_INCREMENT = 1;
+
+-- 새 테이블
+ALTER TABLE `BOARD`
+	ADD CONSTRAINT `FK_MEMBER_TO_BOARD` -- MEMBER -> 새 테이블
+		FOREIGN KEY (
+			`MNO` -- 회원일련번호
+		)
+		REFERENCES `MEMBER` ( -- MEMBER
+			`MNO` -- 회원일련번호
+		);
+
+-- 새 테이블2
+ALTER TABLE `COMMENT`
+	ADD CONSTRAINT `FK_MEMBER_TO_COMMENT` -- MEMBER -> 새 테이블2
+		FOREIGN KEY (
+			`MNO` -- 회원일련번호
+		)
+		REFERENCES `MEMBER` ( -- MEMBER
+			`MNO` -- 회원일련번호
+		);
+
+-- 새 테이블2
+ALTER TABLE `COMMENT`
+	ADD CONSTRAINT `FK_BOARD_TO_COMMENT` -- 새 테이블 -> 새 테이블2
+		FOREIGN KEY (
+			`BNO` -- 게시글일련번호
+		)
+		REFERENCES `BOARD` ( -- 새 테이블
+			`BNO` -- 게시글일련번호
+		);
+
+-- 새 테이블3
+ALTER TABLE `ATTACHFILE`
+	ADD CONSTRAINT `FK_BOARD_TO_ATTACHFILE` -- 새 테이블 -> 새 테이블3
+		FOREIGN KEY (
+			`BNO` -- 게시글일련번호
+		)
+		REFERENCES `BOARD` ( -- 새 테이블
+			`BNO` -- 게시글일련번호
+		);
